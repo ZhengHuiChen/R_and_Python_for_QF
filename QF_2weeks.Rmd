@@ -1,0 +1,222 @@
+---
+title: "Data struceure for R and Python"
+author: "Zheng-Hui Chen"
+date: "3/4/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+***
+本週作業與進度：  
+1. 完成在Anaconda下，jupyter notebook建置R語言開發環境  
+2. 研究Rmarkdown基本指令  
+3. R: Atomic Vector: numeric, integer, logical, complex, character
+
+***
+
+***
+##### __R__ __functions__:  
+class()  
+dim()  
+length()  
+c()  
+rnorm()
+
+##### __Python__ __functions__:  
+type()  
+len()
+
+***
+
+# R 
+1. 這部分來探討Ｒ最基礎的資料結構－__Atomic__ __Vector__
+
+2. 原子向量(atomic vector)又稱為 __「同質性向量」__  
+
+    __補充：強制型別轉換__  
+        __logic-->integer-->numeric-- >character__
+```{r}
+v <- c(TRUE, FALSE)
+class(v)
+v <- c(TRUE, FALSE, 100L)
+class(v)
+v <- c(TRUE, FALSE, 100L, 100)
+class(v)
+v <- c(TRUE, FALSE, 100L, 100, "100")
+class(v)
+
+
+```
+
+
+3. R沒有 __純量(scalar)__，純量只不過是長度為1的向量  
+    __補充：空向量(empty vector)__  
+    可透過vector()函數產生空向量
+```{r}
+?vector # 查詢vector函數
+vector() # 空向量(empty vector)
+```
+```{r}
+vector(mode = "logical", length = 5)  # 各個不同類別型態的向量初始化
+vector(mode = "numeric", length = 5)  # 注意向量元素的內容
+vector(mode = "integer", length = 5)
+vector(mode = "character", length = 5)
+vector(mode = "complex", length = 5)
+```
+
+
+4. R裡面所有的操作背後都有一個函數  
+```{r}
+10 > 2
+`>`(10, 2) # 指令與上行相同
+x <- 100
+`<-`(x, 100) # 指令與上行相同
+x
+```
+
+5. R的向量沒有維度 __(dimension)__ 這個屬性
+```{r}
+dim(1:10)  ## NULL: 代表『不存在』意義的一個R物件
+dim(vector()) # 即使空向量也是
+
+```
+6. R裡面所有的東西都是 __物件__，包含函數。
+```{r}
+class(rnorm)   
+```
+
+  
+
+## Atomic Vector
+### 1. numeric: 
+```{r}
+100 # 數字100
+class(x = 100) # 查詢物件的類別型態
+rnorm(n = 10, mean = 5, sd = 2) # 產生常態分配的亂數
+1e-3
+1E-3 # 大寫E與小寫e皆可
+class(2.78e-3)
+```
+
+### 2. integer:  
+```{r}
+x <- 1:10
+length(x)
+dim(x)
+class(x)
+1L
+class(1L)
+1:10; 10:1  # 加;號，簡短程式可寫在同一行
+```
+
+### 3. character (character string):
+```{r}
+"A"
+'A'
+c("A", "B", "c")
+"" # 空字串
+letters
+LETTERS
+month.abb
+month.name
+
+```
+
+### 4. logical:
+```{r}
+TRUE
+FALSE
+c(T, T, F, F) # 縮寫
+
+```
+
+### 5. complex:
+
+```{r}
+1 + 1i
+1 + 0i
+
+# 1 + 1*i
+# not run
+```
+$\sqrt{-1}$ :
+```{r}
+sqrt(-1 + 0i)  # 
+```
+
+## Array
+當Vector擁有維度(dimension)之後，其類別型態變為 __『Array』__。當其維度為『1維』時，其為『一維陣列』。維度為『2維』時，其 __特稱__ 為 __『矩陣(Matrix)』__ ，其他情況，如『3維以上』亦皆為『陣列』。  
+  
+因為陣列(含矩陣)其來源為同質性的Atomic Vector，故陣列(含矩陣)亦為 __同質性__ 的資料型態。  
+
+```{r Array}
+v <- 1:30
+dim(v)
+class(v)
+dim(v) <- 30
+class(v) # 為『1維陣列』
+v
+dim(v) <- c(5, 6)
+class(v) # 為矩陣
+v
+dim(v) <- c(5, 3, 2)
+class(v) # 3維陣列
+
+dim(v) <- NULL # 失去維度後，會變為原來同質性的integer vector
+v 
+
+```
+
+
+
+## Matrix (2維陣列)
+```{r}
+v1 <- 1:20
+dim(v1) <- c(5, 4)
+v1
+
+v2 <- matrix(data = 1:20, nrow = 5, ncol = 4)
+v2 # v1與v1內容相同，但做法不同。
+```
+
+
+
+
+
+
+
+
+
+
+***
+# Python
+## Basic Type
+### 1. float
+```{python 科學記號}
+1e-3
+1E-3 # 大寫E也可以
+type(1e3)
+```
+
+
+
+### 2. int  
+### 3. string
+### 4. list
+### 5. tuple
+### 6. dict
+### 7. set
+### 8 complex
+```{python}
+1 + 1j
+1 - 2J # 大寫J也可以
+```
+
