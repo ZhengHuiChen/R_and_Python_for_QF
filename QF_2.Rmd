@@ -3,8 +3,11 @@ title: "Data struceure for R and Python"
 author: "Zheng-Hui Chen"
 date: "3/4/2020"
 output:
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: yes
+  word_document: default
   html_document: default
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -21,6 +24,8 @@ knitr::opts_chunk$set(
 3. R: Atomic Vector: numeric, integer, logical, complex, character
 
 ***
+
+
 
 ***
 ##### __R__ __functions__:  
@@ -223,7 +228,16 @@ x
 type(x)
 ```
 
-### 3. string
+### 3. str
+```{python}
+# help(str)
+'This is a string'
+"This is a string"
+'''This is a string'''
+"""This is a string"""
+
+```
+
 
 ### 4. list
 ```{python}
