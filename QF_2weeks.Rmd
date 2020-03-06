@@ -177,14 +177,18 @@ v
 
 
 
-## Matrix (2維陣列)
+## Matrix
 ```{r}
 v1 <- 1:20
 dim(v1) <- c(5, 4)
 v1
 
-v2 <- matrix(data = 1:20, nrow = 5, ncol = 4)
+v2 <- matrix(data = 1:20, nrow = 5, ncol = 4) # by column-order
 v2 # v1與v1內容相同，但做法不同。
+```
+```{r}
+v3 <- matrix(data = 1:20, nrow = 5, ncol = 4, byrow = TRUE) # NOT by column-order
+v3
 ```
 
 
