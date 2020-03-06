@@ -153,7 +153,7 @@ sqrt(-1 + 0i)  #
 ```
 
 ## Array
-當Vector擁有維度(dimension)之後，其類別型態變為 __『Array』__。當其維度為『1維』時，其為『一維陣列』。維度為『2維』時，其 __特稱__ 為 __『矩陣(Matrix)』__ ，其他情況，如『3維以上』亦皆為『陣列』。  
+當Vector擁有維度(dimension)之後，其類別型態變為 __『陣列(Array)』__。當其維度為『1維』時，其為『一維陣列』。維度為『2維』時，其 __特稱__ 為 __『矩陣(Matrix)』__ ，其他情況，如『3維以上』亦皆為『陣列』。  
   
 因為陣列(含矩陣)其來源為同質性的Atomic Vector，故陣列(含矩陣)亦為 __同質性__ 的資料型態。  
 
@@ -209,18 +209,58 @@ v3
 1E-3 # 大寫E也可以
 type(1e3)
 ```
+```{python exponential}
+import math
+type(math.e ** 2 )
+```
 
 
 
 ### 2. int  
+```{python int}
+x = 100
+x
+type(x)
+```
+
 ### 3. string
+
 ### 4. list
+```{python}
+l1 = [True, 1, 1.0, '1', ['a', 'b', 'c']]
+l1
+type(l1)
+len(l1)
+```
+
 ### 5. tuple
+
+```{python}
+import random
+t1 = (1, 2, 2, random.gauss(10, 2))
+t1
+type(t1)
+
+t2 = 2, 4
+t2
+type(t2)
+```
+
 ### 6. dict
+
 ### 7. set
+
 ### 8 complex
 ```{python}
+import math
+import cmath
 1 + 1j
 1 - 2J # 大寫J也可以
+
+# NOT RUN
+# math.sqrt(-1) 
+
+cmath.sqrt(-1 + 0j)
+cmath.sqrt(-1)
 ```
 
