@@ -3,11 +3,11 @@ title: "Data struceure for R and Python"
 author: "Zheng-Hui Chen"
 date: "3/4/2020"
 output:
+  html_document: default
+  word_document: default
   pdf_document: 
     latex_engine: xelatex
     keep_tex: yes
-  word_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -134,6 +134,16 @@ month.abb
 month.name
 
 ```
+```{r}
+my.name <- readline(prompt="Enter name: ") # 從使用者鍵入值讀取資料
+my.age <- readline(prompt="Enter age: ")   # 從使用者鍵入值讀取資料
+class(my.name)
+class(my.age)
+# convert character into integer
+my.age <- as.integer(my.age) 
+print(paste("Hi,", my.name, "next year you will be", my.age+1, "years old."))
+```
+
 
 ### 4. logical:
 ```{r}
@@ -146,15 +156,16 @@ c(T, T, F, F) # 縮寫
 ### 5. complex:
 
 ```{r}
-1 + 1i
-1 + 0i
-
+clx1 <- 1 + 1i
+class(clx1)
+clx2 <- 1 + 0i
+class(clx2)
 # 1 + 1*i
 # not run
 ```
 $\sqrt{-1}$ :
 ```{r}
-sqrt(-1 + 0i)  # 
+sqrt(-1 + 0i)  # 可得虛數i
 ```
 
 ## Array
@@ -235,9 +246,60 @@ type(x)
 "This is a string"
 '''This is a string'''
 """This is a string"""
-
+```
+```{python}
+s1 = "\tThis string starts with a \"tab\"." 
+s1
+print(s1)
+```
+```{python}
+x = "\tThis string starts with a \"tab\"." 
+x
+print(x)
 ```
 
+
+```{python}
+x = "This string contains a single backslash(\\)."
+x
+print(x)
+```
+
+
+```{python}
+x = 'Can\'t get by without a backslash'
+x
+print(x)
+```
+
+
+```{python}
+x = "Backslash your \" character!"
+x
+print(x)
+```
+
+
+```{python}
+x = 'You can leave the " alone'
+x
+print(x)
+```
+
+
+```{python}
+x = """Starting and ending a string with triple " characters
+permits embedded newlines, and the use of " and ' without
+backslashes"""
+x
+print(x)
+```
+```{python}
+# name = input("Name? ") # 從使用者鍵入值取得資料
+# type(name)
+# print(name)
+
+```
 
 ### 4. list
 ```{python}
