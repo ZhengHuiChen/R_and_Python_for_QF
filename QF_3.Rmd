@@ -1,8 +1,504 @@
 ---
-title: "Subsetting for R and Python"
-author: "Chen Zheng-Hui"
-date: "3/6/2020"
-output: html_document
+title: "Data struceure for R and Python"
+author: "Zheng-Hui Chen"
+date: "3/11/2020"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: 
+    latex_engine: xelatex
+    keep_tex: yes
 ---
-# R
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+***
+本週作業與進度：  
+1.  
+2.  
+3.  
+
+***
+
+***
+##### __R__ __functions__:  
+class()  
+dim()  
+length()  
+c()  
+rnorm()  
+vector()  
+matrix()  
+list()  
+data.frame()  
+
+##### __Python__ __functions__:  
+type()  
+len()  
+integer()  
+float()  
+int()  
+str()  
+
+
+***
+
+# R 
+1. 這部分來探討Ｒ最基礎的資料結構－__Atomic__ __Vector__
+
+2. 原子向量(atomic vector)又稱為 __「同質性向量」__  
+
+    __補充：強制型別轉換__  
+        __logic-->integer-->numeric-- >character__
+```{r 強制型別轉換}
+v <- c(TRUE, FALSE)
+class(v)
+v <- c(TRUE, FALSE, 100L)
+class(v)
+v <- c(TRUE, FALSE, 100L, 100)
+class(v)
+v <- c(TRUE, FALSE, 100L, 100, "100")
+class(v)
+
+
+```
+
+
+3. R沒有 __純量(scalar)__，純量只不過是長度為1的向量  
+    __補充：空向量(empty vector)__  
+    可透過vector()函數產生空向量
+```{r}
+?vector # 查詢vector函數
+vector() # 空向量(empty vector)
+```
+
+
+```{r}
+vector(mode = "logical", length = 5)  # 各個不同類別型態的向量初始化
+vector(mode = "numeric", length = 5)  # 注意向量元素的內容
+vector(mode = "integer", length = 5)
+vector(mode = "character", length = 5)
+vector(mode = "complex", length = 5)
+```
+
+
+4. R裡面所有的操作背後都有一個函數  
+   __補充：物件命名規則__  
+   物件名稱可由英文字母、數字、『.』、『_』構成，但 __不可__：  
+a. 數字開頭  
+```{r 命名規則1}
+# NOT RUN
+# 1x <- 100
+# 錯誤: unexpected symbol in "1x"
+```
+b. 『_』開頭  
+```{r 命名規則2}
+# _x <- 100
+# 錯誤: unexpected input in "_"
+```
+c. 含空白字元  
+```{r 命名規則3}
+# x y <- 100
+# 錯誤: unexpected symbol in "x y"
+```
+   
+   如要打破上述命名規格，可使用成對『`』，如` `：
+```{r 命名規則4}
+`1x` <- 100
+`1x`
+`_x` <- 100
+`_x`
+`:)` <- 100
+`:)`
+`x y` <- 100
+`x y`
+```
+常見的R指令，其實也有一個函數作支援：
+```{r `>`}
+10 > 2
+`>`(10, 2) # 指令與上行相同
+x <- 100
+x
+`<-`(x, 100) # 指令與上行相同
+x
+```
+
+5. R的 __向量__ 沒有 __維度(dimension)__ 這個屬性
+```{r dim}
+dim(1:10)  ## NULL: 代表『不存在』意義的一個R物件
+dim(vector()) # 即使空向量也是
+
+```
+6. R裡面所有的東西都是 __物件__，包含函數。
+```{r class(f)}
+class(rnorm)   
+```
+  
+## Atomic Vector
+### numeric: 
+```{r numeric}
+100 # 數字100
+class(x = 100) # 查詢物件的類別型態
+rnorm(n = 10, mean = 5, sd = 2) # 產生常態分配的亂數
+1e-3
+1E-3 # 大寫E與小寫e皆可
+class(2.78e-3)
+```
+
+### integer:  
+```{r integer}
+x <- 1:10
+length(x)
+dim(x)
+class(x)
+1L
+class(1L)
+1:10; 10:1  # 加;號，簡短程式可寫在同一行
+```
+
+### logical:
+```{r logical}
+TRUE
+FALSE
+c(T, T, F, F) # 縮寫
+
+```
+
+### character (character string):
+```{r character1}
+"A"
+'A'
+c("A", "B", "C")
+"" # 空字串
+# 常用的字元字串向量
+letters
+LETTERS
+month.abb
+month.name
+```
+```{r readline, eval=FALSE, include=FALSE}
+# my.name <- readline(prompt="Enter name: ") # 從使用者鍵入值讀取資料
+# my.age <- readline(prompt="Enter age: ")   # 從使用者鍵入值讀取資料
+# class(my.name)
+# class(my.age)
+# # convert character into integer
+# my.age <- as.integer(my.age)
+# print(paste("Hi,", my.name, "next year you will be", my.age+1, "years old."))
+```
+
+### complex:
+
+```{r R complex}
+clx1 <- 1 + 1i
+class(clx1)
+clx2 <- 1 + 0i
+class(clx2)
+# 1 + 1*i
+# not run
+```
+$\sqrt{-1}$ :
+```{r sqrt(-1)}
+sqrt(-1 + 0i)  # 可得虛數i
+```
+
+### NA 
+```{r NA1}
+class(NA)
+class(NA_character_); class(NA_complex_); class(NA_integer_); class(NA_complex_)
+length(NA)
+```
+```{r NA2}
+x <- c(1, 2, NA, 4, NA)
+x == NA
+# 判斷是否為NA，請用is.na()
+is.na(x)
+```
+
+### NULL
+```{r NULL}
+class(NULL)
+length(NULL)
+
+NULL == NULL
+NULL == NA
+NULL == 0
+
+NULL == NULL
+is.null(NULL)
+```
+
+### Inf
+```{r R Inf}
+class(Inf)
+print(1/0)
+print(log(0))
+1 + 1/0
+Inf == Inf
+Inf == -Inf
+is.infinite(-Inf)
+is.infinite(Inf)
+is.finite(Inf)
+```
+### 向量常見的屬性與操作
+#### names
+```{r names attributes}
+x <- 1:5
+x
+names(x)
+names(x) <- c("A", "B", "C", "D", "E")
+x
+```
+#### dim
+由之前的範例可知，R的向量不具有維度(dim)屬性  
+```{r dim attributes}
+dim(x)
+```
+ _值得注意的是，長度(length())並不算屬性_。
+
+## Array
+當Vector擁有維度(dimension)之後，其類別型態變為 __『陣列(Array)』__。當其維度為『1維』時，其為『一維陣列』。維度為『2維』時，其 __特稱__ 為 __『矩陣(Matrix)』__ ，其他情況，如『3維以上』亦皆為『陣列』。  
+  
+因為陣列(含矩陣)其來源為同質性的Atomic Vector，故陣列(含矩陣)亦為 __同質性__ 的資料型態。  
+
+```{r Array}
+v <- 1:30
+dim(v)
+class(v)
+dim(v) <- 30
+class(v) # 為『1維陣列』
+v
+dim(v) <- c(5, 6)
+class(v) # 為矩陣
+v
+dim(v) <- c(5, 3, 2)
+class(v) # 3維陣列
+
+dim(v) <- NULL # 失去維度後，會變為原來同質性的integer vector
+v 
+
+```
+
+
+
+## Matrix
+```{r matrix1}
+v1 <- 1:20
+dim(v1) <- c(5, 4)
+v1
+
+v2 <- matrix(data = 1:20, nrow = 5, ncol = 4) # by column-order
+v2 # v1與v1內容相同，但做法不同。
+```
+```{r matrix2}
+v3 <- matrix(data = 1:20, nrow = 5, ncol = 4, byrow = TRUE) # NOT by column-order
+v3
+```
+值得注意的是，針對一個矩陣求取長度(length)：
+```{r length of matrix}
+length(v3) # 回傳向量的長度
+```
+由此可以，向量與矩陣的差別在於是否具有維度屬性與否。
+
+## List
+為『異質性向量』，亦不具『維度』。
+### list建立
+```{r R list}
+?list
+l1 <- list(TRUE, 1L, 1, "1", list(100, 200), mean, median, sd)
+class(l1)
+length(l1)
+dim(l1)
+print(l1)
+```
+### list索引
+#### `[`
+#### `[[`
+#### $
+
+
+## Data Frame
+```{r data frame建構}
+df <- data.frame(A = 10:1, B = rnorm(n = 10), C = runif(n = 10))
+df
+?data.frame
+```
+
+
+***
 # Python
+## Basic Type
+### float
+```{python 科學記號}
+1e-3
+1E-3 # 大寫E也可以
+type(1e3)
+```
+```{python exponential}
+import math
+type(math.e ** 2 )
+```
+
+
+
+### int  
+```{python int}
+x = 100
+x
+type(x)
+```
+### bool
+只有True或False
+```{python bool}
+True
+type(False)
+float(True)
+float(False)
+int(True)
+int(False)
+True is 1
+True == 1 
+```
+
+### str
+```{python}
+# help(str)
+'This is a string'
+"This is a string"
+'''This is a string'''
+"""This is a string"""
+```
+```{python}
+s1 = "\tThis string starts with a \"tab\"." 
+s1
+print(s1)
+```
+```{python}
+x = "\tThis string starts with a \"tab\"." 
+x
+print(x)
+```
+
+
+```{python}
+x = "This string contains a single backslash(\\)."
+x
+print(x)
+```
+
+
+```{python}
+x = 'Can\'t get by without a backslash'
+x
+print(x)
+```
+
+
+```{python}
+x = "Backslash your \" character!"
+x
+print(x)
+```
+
+
+```{python}
+x = 'You can leave the " alone'
+x
+print(x)
+```
+
+
+```{python}
+x = """Starting and ending a string with triple " characters
+permits embedded newlines, and the use of " and ' without
+backslashes"""
+x
+print(x)
+```
+```{python}
+# name = input("Name? ") # 從使用者鍵入值取得資料
+# type(name)
+# print(name)
+
+```
+
+### list
+Python中的list自由有順序的元素構成。與R的list相同，皆可包含不同型別的元素在裡頭。
+```{python Python list}
+l1 = [True, 1, 1.0, '1', ['a', 'b', 'c']]
+l1
+type(l1)
+len(l1)
+```
+
+### tuple
+tuple與list類似，但是tuple只能被建立而不能被修改。
+
+與list類似，在Python中被視為有順序的『序列』
+
+```{python touple}
+import random
+t1 = (1, 2, 2, random.gauss(10, 2))
+t1
+type(t1)
+
+t2 = 2, 4
+t2
+type(t2)
+```
+
+### dict
+
+### set
+
+### complex
+```{python Python complex}
+import math
+import cmath
+1 + 1j
+1 - 2J # 大寫J也可以
+
+# NOT RUN
+# math.sqrt(-1) 
+
+cmath.sqrt(-1 + 0j)
+cmath.sqrt(-1)
+```
+### None
+特殊的基本型態，代表『不存在』或是『空值』的意義(類似R中的 __NULL__ )。  
+None在Python亦代表 __佔位符號(place holder)__，用來表示資料中某一個欄位目前尚未得知具體之值，先保留該位置，之後再填值(類似R中 __NA__ 的功能)。
+```{python None}
+type(None)
+None == False
+None == 0
+None == None # None只會等於自己
+False == 0  
+
+# 與R比較 (Not Run)：
+# len(None)
+
+# TypeError: object of type 'NoneType' has no len()
+```
+
+
+
+### Inf
+```{python Python Inf}
+float('Inf')
+float('inf')
+float('INF')
+
+import math
+math.inf
+math.isinf(float("-inf")) # OUTPUT:True. Return True if x is a positive or negative infinity, and False otherwise.
+math.isinf(float("inf"))  # OUTPUT:True
+# by comparing to infinity
+float("inf") == float("inf") # OUTPUT:True
+float("-inf") == float("-inf") # OUTPUT:True
+float("inf") == float("-inf")
+```
+
