@@ -1,0 +1,35 @@
+---
+title: "Subsetting for R and Python"
+author: "Chen Zheng-Hui"
+date: "3/13/2020"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = TRUE,
+	warning = TRUE
+)
+```
+***
+本週作業與進度：  
+1.  
+2.  
+3.  
+
+***
+
+***
+##### __R__ __functions__:  
+
+
+##### __Python__ __functions__:  
+
+***
+# R
+
+
+# Python
+
+
+
