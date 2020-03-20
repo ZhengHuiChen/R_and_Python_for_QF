@@ -1,9 +1,11 @@
 ---
-title: "Data struceure for R and Python"
+title: "Data Structure for R and Python"
 author: "Zheng-Hui Chen"
-date: "3/11/2020"
+date: "3/18/2020"
 output:
-  html_document: default
+  html_document:
+     toc: true
+     toc_depth: 5
   word_document: default
   pdf_document: 
     latex_engine: xelatex
@@ -18,60 +20,77 @@ knitr::opts_chunk$set(
 )
 ```
 ***
-本週作業與進度：  
-1.  
-2.  
-3.  
+#### 本週作業與進度
+*  __QF_3.Rmd__ 檔案內容研讀  
+* https://adv-r.hadley.nz/names-values.html
+* https://adv-r.hadley.nz/subsetting.html
+
+#### 下週進度
+* Data Frame  
+* Python Basic Type   
+* 編寫 R function  
+* 函數預設值，含 dot dot dot  
 
 ***
 
 ***
-##### __R__ __functions__:  
-class()  
-dim()  
-length()  
-c()  
-rnorm()  
-vector()  
-matrix()  
-list()  
-data.frame()  
+#### __R__ __functions__:  
+* class()  
+* dim()  
+* length()  
+* c()  
+* rnorm()  
+* vector()  
+* matrix()  
+* list()  
+* data.frame()
+* typeof()
+* `[`  
+* `[[`  
+* `$`
 
-##### __Python__ __functions__:  
-type()  
-len()  
-integer()  
-float()  
-int()  
-str()  
+
+#### __Python__ __functions__:  
+* type()  
+* len()  
+* integer()  
+* float()  
+* int()  
+* str()  
 
 
 ***
 
-# R 
-1. 這部分來探討Ｒ最基礎的資料結構－__Atomic__ __Vector__
+# R
+1. 這部分來探討Ｒ最基礎的資料結構－ __Atomic Vector__ ，再討論以原子向量為延伸，加入 _dim_ 屬性的 __Array__ 。接著討論屬於異質資料的 __List__ 與 __Data Frame__ 。
 
-2. 原子向量(atomic vector)又稱為 __「同質性向量」__  
+2. 原子向量(atomic vector)又稱為 __「同質性向量(homogeneous)」__  
 
-    __補充：強制型別轉換__  
-        __logic-->integer-->numeric-- >character__
+* __補充：強制型別轉換__  
+        __logic --> integer --> numeric --> complex --> character__
 ```{r 強制型別轉換}
 v <- c(TRUE, FALSE)
 class(v)
+v
 v <- c(TRUE, FALSE, 100L)
 class(v)
+v
 v <- c(TRUE, FALSE, 100L, 100)
 class(v)
+v
+v <- c(TRUE, FALSE, 100L, 100, 100 + 0i)
+class(v)
+v
 v <- c(TRUE, FALSE, 100L, 100, "100")
 class(v)
-
+v
 
 ```
 
 
 3. R沒有 __純量(scalar)__，純量只不過是長度為1的向量  
-    __補充：空向量(empty vector)__  
-    可透過vector()函數產生空向量
+* __補充：空向量(empty vector)__  
+    可透過vector()函數產生 __空向量__
 ```{r}
 ?vector # 查詢vector函數
 vector() # 空向量(empty vector)
@@ -88,8 +107,8 @@ vector(mode = "complex", length = 5)
 
 
 4. R裡面所有的操作背後都有一個函數  
-   __補充：物件命名規則__  
-   物件名稱可由英文字母、數字、『.』、『_』構成，但 __不可__：  
+* __補充：物件命名規則__  
+   物件名稱可由『英文字母』、『數字』、『.』、『_』構成，但 __不可__：  
 a. 數字開頭  
 ```{r 命名規則1}
 # NOT RUN
@@ -106,8 +125,16 @@ c. 含空白字元
 # x y <- 100
 # 錯誤: unexpected symbol in "x y"
 ```
-   
-   如要打破上述命名規格，可使用成對『`』，如` `：
+d. 為保留字(reserved words)。可用?reserved查詢所有R的保留字。  
+
+另外，如用dot開頭(ex:.xx)命名時，變數會被創建，但物件名不會出現在Global Enviroment中。但可透過 _ls()_ 中將參數 _all.names_ 設定為 _TRUE_ 即可
+```{r}
+.x <- 100
+ls() # 看不到.x
+ls(all.names = TRUE) # 可看見.x
+```
+
+如要打破上述命名規則，可使用成對『``』將名字放在其中：
 ```{r 命名規則4}
 `1x` <- 100
 `1x`
@@ -118,7 +145,7 @@ c. 含空白字元
 `x y` <- 100
 `x y`
 ```
-常見的R指令，其實也有一個函數作支援：
+常見的R指令(如二元運算子)，背後也都有一個函數作支援：
 ```{r `>`}
 10 > 2
 `>`(10, 2) # 指令與上行相同
@@ -130,38 +157,38 @@ x
 
 5. R的 __向量__ 沒有 __維度(dimension)__ 這個屬性
 ```{r dim}
-dim(1:10)  ## NULL: 代表『不存在』意義的一個R物件
-dim(vector()) # 即使空向量也是
+dim(x = 1:10)  ## NULL: 代表『不存在』意義的一個R物件
+dim(x = vector()) # 即使空向量也是
 
 ```
 6. R裡面所有的東西都是 __物件__，包含函數。
 ```{r class(f)}
-class(rnorm)   
+class(x = rnorm)   # function物件
 ```
   
 ## Atomic Vector
-### numeric: 
+### numeric
 ```{r numeric}
 100 # 數字100
 class(x = 100) # 查詢物件的類別型態
 rnorm(n = 10, mean = 5, sd = 2) # 產生常態分配的亂數
 1e-3
 1E-3 # 大寫E與小寫e皆可
-class(2.78e-3)
+class(x = 2.78e-3)
 ```
 
-### integer:  
+### integer
 ```{r integer}
 x <- 1:10
-length(x)
-dim(x)
-class(x)
+length(x = x)
+dim(x = x)
+class(x = x)
 1L
-class(1L)
+class(x = 1L)
 1:10; 10:1  # 加;號，簡短程式可寫在同一行
 ```
 
-### logical:
+### logical
 ```{r logical}
 TRUE
 FALSE
@@ -169,7 +196,7 @@ c(T, T, F, F) # 縮寫
 
 ```
 
-### character (character string):
+### character (character string)
 ```{r character1}
 "A"
 'A'
@@ -191,7 +218,7 @@ month.name
 # print(paste("Hi,", my.name, "next year you will be", my.age+1, "years old."))
 ```
 
-### complex:
+### complex
 
 ```{r R complex}
 clx1 <- 1 + 1i
@@ -207,6 +234,7 @@ sqrt(-1 + 0i)  # 可得虛數i
 ```
 
 ### NA 
+__not available__ 的縮寫，代表『遺失值』意義。
 ```{r NA1}
 class(NA)
 class(NA_character_); class(NA_complex_); class(NA_integer_); class(NA_complex_)
@@ -220,6 +248,7 @@ is.na(x)
 ```
 
 ### NULL
+代表『不存在』意義的特殊物件。
 ```{r NULL}
 class(NULL)
 length(NULL)
@@ -244,7 +273,7 @@ is.infinite(-Inf)
 is.infinite(Inf)
 is.finite(Inf)
 ```
-### 向量常見的屬性與操作
+### 常見的屬性(attributes)與索引操作(subsetting)
 #### names
 ```{r names attributes}
 x <- 1:5
@@ -258,7 +287,153 @@ x
 ```{r dim attributes}
 dim(x)
 ```
- _值得注意的是，長度(length())並不算屬性_。
+ _值得注意的是，長度(length())並不算屬性_。  
+ 
+#### subsetting for `[`
+##### postive vector  
+```{r}
+v <- c(1, 4, 5, 2, 8)
+length(v)
+v[1]
+v[3]
+v[1:3]
+# v[1,3, 3]
+v[c(1, 3, 5)]
+v[7]
+v[4:8]
+```
+##### character vector
+```{r}
+v <- c(1, 4, 5, 2, 8)
+names(v) <- letters[1:5]
+v
+v["a"]
+v[c("a", "c", "e")]
+```
+##### negative vector
+```{r}
+v <- 1:5
+length(v)
+v[-1]
+v[-c(1, 3, 5)]
+v[-(1:3)]
+v[-8]   # 欲刪除之index不存在
+```
+##### logical
+```{r}
+v <- 1:5
+v[c(T, T, F, F, T)]
+```
+
+##### NULL
+```{r}
+v <- 1:5
+v[NULL]
+```
+
+##### nothing
+```{r}
+v <- 1:5
+v[]
+```
+##### zero
+```{r}
+v <- 1:4
+v[0]
+
+w <- letters[1:5]
+w[0]
+```
+
+##### NA
+```{r}
+v <- 1:5
+v[NA]
+```
+
+##### postive + negative
+```{r}
+# v <- 1:4
+# v[c(1, -3, 4)]
+# Error in v[c(1, -3, 4)] : 只有負數下標中才能有 0
+```
+
+##### postive + NA
+```{r}
+v <- 1:5
+v[c(1, 2, NA, 4)]
+```
+
+##### negtive + NA
+```{r}
+v <- 1:5
+v[c(-1, -2, 0, -4)]
+```
+
+##### postive + zero
+```{r}
+v <- 1:5
+v[c(0, 1, 2)]
+v[c(1, 0, 2)]
+v[c(1, 2, 0)]
+```
+##### negtive + zero
+```{r}
+v <- 1:5
+v[c(0, -1, -2)]
+```
+
+##### positive + NULL 
+```{r}
+v <- 1:5
+v[NULL]
+v[c(NULL, 1, 3)]
+
+```
+
+##### negative + NULL 
+```{r}
+# v[c(-1, -2, NA)]
+# Error in v[c(-1, -2, NA)] : 只有負數下標中才能有 0
+```
+
+
+#### 案例補充 -- 集合操作
+```{r}
+set.seed(seed = 1000) # 設定亂數種子
+d <- rnorm(n = 100, mean = 10, sd = 5)
+head(d) # 觀察前6筆資料
+tail(d) # 觀察後6筆資料
+tail(d, n = 10)  # 可透過參數n設定，觀察更多筆資料
+names(d)
+names(d) <- sample(x = c(letters, 1:9), size = 100, replace = TRUE) # 設定names屬性
+```
+透過R集合(set)相關的函數操作，可將向量視為集合，如集合的交集、聯集與差集等。
+
+```{r}
+?setdiff  # 查詢相關集合函數
+setequal(x = c(1, 1, 2, 3, 3, 3), y = c(1, 3, 2)) # 集合的比較
+x <- names(d)  # 抓出每個樣本點的名稱
+x              # 注意：名稱會有重複的現象。
+setdiff(x = x, y = as.character(1:9)) # 以集合的方式扣除掉數字名後得出所有英文字母的名稱，不會有重複
+```
+
+
+```{r}
+d[setdiff(x = x, y = as.character(1:9))]
+```
+__注意：以上做法會有問題。__ 因名稱會有重複的現象，所以當你用character vector subsetting的方式按名稱取值，只會抓出具相同名稱的樣本點中第一個值，因此在上述結果只有看各名稱下唯一值的數字。 __建議：雖然R允許取重複名稱，但我們不建議。__
+```{r}
+nms <- setdiff(x = x, y = as.character(1:9)) # 這是我們要抓的名單
+# 用is.element()一個個去檢查每一個樣本點是否在我們的名單(set)中(採logical vector subsetting)
+d[is.element(el = names(d), set = nms)]     
+```
+
+```{r}
+d[is.element(el = names(d), set = c("A", "B", "100"))]    # 會取出空向量
+d[is.element(el = names(d), set = c(nms, "1", "2", "3"))] # 名單添加1號, 2號, 3號   
+```
+
 
 ## Array
 當Vector擁有維度(dimension)之後，其類別型態變為 __『陣列(Array)』__。當其維度為『1維』時，其為『一維陣列』。維度為『2維』時，其 __特稱__ 為 __『矩陣(Matrix)』__ ，其他情況，如『3維以上』亦皆為『陣列』。  
@@ -302,32 +477,94 @@ v3
 ```{r length of matrix}
 length(v3) # 回傳向量的長度
 ```
-由此可以，向量與矩陣的差別在於是否具有維度屬性與否。
+由此可知，向量與矩陣的差別在於是否具有維度屬性與否。
 
 ## List
-為『異質性向量』，亦不具『維度』。
+為 __『異質性(heterogeneous)向量』__，亦不具『維度』。
+
 ### list建立
 ```{r R list}
-?list
+# ?list
 l1 <- list(TRUE, 1L, 1, "1", list(100, 200), mean, median, sd)
 class(l1)
 length(l1)
 dim(l1)
 print(l1)
 ```
-### list索引
+### list subsetting
 #### `[`
+回傳 ___(子清單)sub-list___ 。  
+```{r}
+l <-  list(TRUE, 1L, 1, "1", list(100, 200), matrix(1:20, nrow = 5, ncol = 4), mean)
+l[5]
+class(l[6])
+```
+
+
 #### `[[`
+回傳list中元素的內容物，內容物是什麼，提領出來就是什麼。  
+```{r}
+l <-  list(TRUE, 1L, 1, "1", list(100, 200), matrix(1:20, nrow = 5, ncol = 4), mean)
+l[6]
+class(l[[6]])
+l[[7]]
+class(l[[7]])
+l[[7]](1:20)
+```
+
+
 #### $
+當list具備 __『names』__ 屬性時即可使用$。功能類似`[[`，但不完全相同。且在互動模式下使用便利。
+```{r}
+l <- list(A = 100, B = 200, E = 300)
+l[["A"]]
+l$A
+```
+
+
+```{r}
+l <- list(A = 100, B = 200, E = 300)
+x <- "A"
+l[[x]]
+l$x
+```
+因為R會將程式 _l[[x]]_ 視為 _l$x_ ，因  _l_ 內並無元素命名為 _x_ ，故回傳NULL。
 
 
 ## Data Frame
+
 ```{r data frame建構}
+# ?data.frame
 df <- data.frame(A = 10:1, B = rnorm(n = 10), C = runif(n = 10))
 df
-?data.frame
+class(df)
+typeof(df) # 可確認data frame的內部型態本質為list
 ```
+data frame的特性有些來自matrix，有些來自list。  
 
+### from Matrix
+```{r}
+dim(df)
+dimnames(df)
+colnames(df)
+rownames(df)
+df[, "A"]
+df[2, ]
+df["2", ]
+df[8, 1]
+df["8", 1]
+df["8", "A"]
+df[8, "A"]
+```
+### from List
+```{r}
+length(df)
+names(df)
+df$A
+df$A[8]
+df[["A"]][8]
+df[[c(1, 8)]] # recursive setting。分兩層提取資料，第一層先抓第1個元素，進去第二層資料後提領第8個。
+```
 
 ***
 # Python
@@ -365,6 +602,8 @@ True == 1
 ```
 
 ### str
+* 為字元序列(sequence)型別。
+* 為不可變(immutable)ㄉ˙
 ```{python}
 # help(str)
 'This is a string'
@@ -372,17 +611,19 @@ True == 1
 '''This is a string'''
 """This is a string"""
 ```
-```{python}
-s1 = "\tThis string starts with a \"tab\"." 
-s1
-print(s1)
-```
+
+
+反斜線(\\)可用於『脫逸字元(escape character)』，可賦予特殊意義。  
+\\n：代表換行  
+\\t：代表Tab  
+\\\\：代表正常的反斜線\\  
+\\"：代表"雙引號字元  
+
 ```{python}
 x = "\tThis string starts with a \"tab\"." 
 x
 print(x)
 ```
-
 
 ```{python}
 x = "This string contains a single backslash(\\)."
@@ -395,11 +636,14 @@ print(x)
 x = 'Can\'t get by without a backslash'
 x
 print(x)
+
+x = "Can't get by without a backslash"
+x
+print(x)
 ```
 
-
 ```{python}
-x = "Backslash your \" character!"
+x = "Backslash your \"character\" !"
 x
 print(x)
 ```
@@ -411,7 +655,8 @@ x
 print(x)
 ```
 
-
+Python提供『三引號』，可建立『跨行字串』，且字串中可包含『單引號'』與『雙引號"』
+}
 ```{python}
 x = """Starting and ending a string with triple " characters
 permits embedded newlines, and the use of " and ' without
@@ -419,41 +664,289 @@ backslashes"""
 x
 print(x)
 ```
+
 ```{python}
 # name = input("Name? ") # 從使用者鍵入值取得資料
 # type(name)
 # print(name)
-
 ```
 
 ### list
-Python中的list自由有順序的元素構成。與R的list相同，皆可包含不同型別的元素在裡頭。
+* Python中的list自由有順序的元素構成(內建資料型態)。
+* 與R的list相同，皆可包含不同型別(異質)的元素在裡頭。
+* 為可變(mutable)的資料型態，支持『原地修改(modify in place)』
+* list長度可變，可嵌套
+
+#### list基本操作
 ```{python Python list}
+l0 = [] # 空list
 l1 = [True, 1, 1.0, '1', ['a', 'b', 'c']]
 l1
 type(l1)
 len(l1)
+list('NCCU')
+list(range(-4, 4))
+l2 = [1, 2, [3, 4]]
+l3 = [5, 6, [7, 8]]
+l2 + l3                                        # list的拼接
+l2 * 3                                         # list的重複
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+matrix
+matrix[1]
+matrix[1][1]
+```
+#### list slicing
+```{python}
+L = ['NCCU', 'MoneyBanking', 'QF']
+L[1] = 'MONEY_BANKING'
+L
+L[0:2] = ['School', 'Department']
+L
+```
+```{python}
+L = [1, 2, 3]
+L
+L[1:2] = [8, 9]  # 長度可變：insertion
+L
+L[1:1] = [6, 7]  # 長度可變：insertion, replace nothing
+L
+L[1:3] = []
+L
+```
+```{r}
+# R code:
+# L <- list(1, 2, 3)   
+# L[1] <- list(8, 9)  
+# 被替換的項目不是替換值長度的倍數
+```
+```{python}
+L = [1]
+L[:0] = [2, 3, 4]            # insert all at 0 
+L
+L[len(L):] = [5, 6, 7]       # insert all at len(L)
+L
+L.extend([8, 9, 10])         # insert all at end, by method
+L
 ```
 
+#### list更多的操作
+```{python}
+L = ['eat', 'more', 'SPAM']
+L.append('please')
+L
+L.sort()
+L
+L.append(['Chen'])           # 請與L.extend() method 比較
+L
+# L.sort()
+# TypeError: '<' not supported between instances of 'list' and 'str'
+# 
+# Detailed traceback: 
+#   File "<string>", line 1, in <module>
+```
+```{python}
+L = ['abc', 'ABD', 'aBe']
+L.sort()
+L
+L = ['abc', 'ABD', 'aBe']
+L.sort(key = str.lower)
+L
+L = ['abc', 'ABD', 'aBe']
+L.sort(key = str.lower, reverse = True)
+L
+```
+```{python}
+L = ['spam', 'eggs', 'ham']
+L.index('eggs')
+
+# L.index('egg')
+# ValueError: 'egg' is not in list
+# 
+# Detailed traceback: 
+#   File "<string>", line 1, in <module>
+
+L.insert(1, 'toast')
+L
+L.remove('eggs')
+L
+L.pop(1)                              # delete by position
+L
+['1', '2', '1', '1', '3'].count('1')  # number of occurences
+```
+```{python}
+L = ['spam', 'eggs', 'ham', 'toast']
+del L[0]
+L
+del L[1:3]
+L
+```
+
+
 ### tuple
-tuple與list類似，但是tuple只能被建立而不能被修改。
+tuple與list類似，但是tuple只能被建立而不能被修改。另外，str、list與tuple在Python中皆視為有順序的『序列』
 
-與list類似，在Python中被視為有順序的『序列』
-
-```{python touple}
+```{python tuple}
 import random
 t1 = (1, 2, 2, random.gauss(10, 2))
 t1
 type(t1)
 
-t2 = 2, 4
+t2 = 2, 4, 8, 1
 t2
 type(t2)
+max(t2)
+t3 = 3,
+type(t3)
+```
+```{python}
+3 in [3, 4, 7, 9, 1]
+```
+```{python}
+one, two, three, four = 1, 2, 3, 4  # 自動打包(packing)後自動解包(unpacking)，同時指定4個變數值
+one
+two
+```
+自動打包與自動解包不只適用於tuple，只要是序列型別都適用。
+```{python}
+v1, v2, v3 = [1, 2, 3]
+v1
+w1, w2, w3 = 'abc'
+w2
+
+# q1, q2 = 'ABC' # 多重指定變數值時，兩邊數量要一樣多
+# ValueError: too many values to unpack (expected 2)
+# 
+# Detailed traceback: 
+#   File "<string>", line 1, in <module>
+```
+__*號版本自動解包__
+```{python *自動解包}
+a, b, *c = (1, 2, 3, 4)
+a
+b
+c
+
+a, *b, c = (1, 2, 3, 4)
+a
+b
+c
+
+*a, b, c = (1, 2, 3, 4)
+a
+b
+c
+a,b,c
+
+a, b, c, d, *e = (1, 2, 3, 4)
+a
+b
+c
+e
+```
+```{python}
+x = [1, 2, 3, 4, 5]
+a, b, *_ = x
+a
+b
+_
+```
+可使用list()函數將任何序列型資料轉為list。而tuple()函數則轉為tuple。
+```{python}
+list((1, 2, 3, 4))
+tuple([1, 2, 3, 4])
+list('NCCU')
+tuple('Money and Banking')
 ```
 
-### dict
-
 ### set
+set代表無順序的資料所構成。反之，list與tuple之元素則有順序意義。而set中重複的資料會被自動刪除不計。值得注意的是，set中的元素須為『不可變的資料』，故整數、浮點數、字串、與tuple可作為set的元素。而list、dict與set本身則不行。
+```{python}
+l1 = l2 = [1, 2, 3] # list為可變資料
+l1
+l2
+l1[0] = 100
+l1
+l2                 # 因list為『可變資料』，所以l2隨l1變化而改變
+```
+```{python}
+n1 = n2 = 1      # int為不可變資料
+n1
+n2
+n1 = 100
+n1
+n2               # 因int為『不可變資料』，所以n2不隨n1變化而改變
+```
+
+```{python}
+x = {1, 2, 1, 3, 3, 1, 2, 4}
+x
+type(x)
+x = set([1, 2, 1, 3, 3, 1, 2, 4])
+x
+type(x)
+x.add(6)
+x
+x.remove(2)
+x
+3 in x
+5 in x
+```
+```{python}
+x = set([1, 2, 3, 1, 3, 5])
+z = frozenset(x)
+type(x)
+type(z)
+
+# z.add(6)
+# AttributeError: 'frozenset' object has no attribute 'add'
+# 
+# Detailed traceback: 
+#   File "<string>", line 1, in <module>
+x.add(z)
+x
+```
+
+
+### dict
+* 以 __鍵(key):值(value)__ 的對應方式建立的資料結構。鍵可為 __『整數』__、 __『字串』__、或其他Python物件。
+* 但字典內資料並 __非__ 按照字面上的順序作為索引排序。
+* 字典可以作為紀錄、搜尋表及其他 _key_ 比 _value_更為重要之用途使用。而字典索引是一種非常有效率的搜索方式。
+
+#### 建立dict
+```{python}
+ages = {'Mary':13, 'John': 14, 'Tony':13}
+type(ages)
+ages
+'Mary' in ages
+```
+```{python}
+x = {}
+x
+type(x)
+x[0] = 'NCCU'  # 此0是當作key，並非當作索引用
+x[1] = 'Money and Banking'
+x
+x[1]
+len(x)
+```
+```{python}
+# empty list
+y = []
+type(y)
+# y[0] = 'NCCU'  # 指定一個不存在的索引值0，值得注意的是：R允許這個操作
+# ndexError: list assignment index out of range
+# 
+# Detailed traceback: 
+#   File "<string>", line 1, in <module>
+```
+```{r}
+l <- list()
+class(l)
+l[1] <- "NCCU"
+l
+```
+#### dict索引
+
 
 ### complex
 ```{python Python complex}
@@ -480,11 +973,8 @@ False == 0
 
 # 與R比較 (Not Run)：
 # len(None)
-
 # TypeError: object of type 'NoneType' has no len()
 ```
-
-
 
 ### Inf
 ```{python Python Inf}
@@ -500,5 +990,75 @@ math.isinf(float("inf"))  # OUTPUT:True
 float("inf") == float("inf") # OUTPUT:True
 float("-inf") == float("-inf") # OUTPUT:True
 float("inf") == float("-inf")
+```
+# 補充：Reserved words (keywords)
+__『保留字(Reserved words)』__ 不可做為變數名稱  
+__R:__  
+if, else, repeat, while, function,  
+
+for, in, next, break,TRUE, FALSE,  
+
+NULL, Inf, NaN, NA, NA_integer_,  
+
+NA_real_, NA_complex_, NA_character_  
+
+__Python:__  
+and,	def,	False,	import,	not,  
+
+True, as,	del,	finally,	in,	or,  
+
+try, assert,	elif,	for,	is,	pass,	
+
+while, break,	else,	from,	lambda,	print,  
+
+with, class, except,	global,	None,	raise,  
+
+yield, continue,	exec,	if,	nonlocal,	return  
+
+# 補充：R套件安裝
+* 在時間序列領域，R使用者常使用 _xts_ package來取代R預設之 _ts_ 類別
+* 如欲下載新的 _xts_ package，使用指令install.packages("xts")
+```{r}
+# install.packages("xts")
+```
+
+* 在下載 _xts_ 時，會一同下載相依套件 _zoo_  
+* 在搜尋xts function(?xts)時，會出函數找不到的問題。可藉由library("xts")，將xts
+package放至搜尋路徑上，而 _?xts_ 即可成功，且新加入的package 會排在 _.GlobalEnv_ 後面，同時相依套件 _zoo_ 亦放在 _xts_ 順序之後。
+```{r}
+library(xts)
+search()
+```
+
+* 在 _GlobalEnv_ 中有的函數若有另一同名的函數，可指定『命名空間(namespace    )』，如『package_name::function_name』  
+```{r}
+stats::rnorm(n = 5)
+```
+
+# 補充：循環補齊(recycling)
+善用循環補齊、即 __元素對元素運算(向量化運算)__ ，執行速度較快。
+```{r}
+1 == 1
+1 == 2
+v1 <- 1:5
+v2 <- 1:5
+v3 <- 1:10
+v4 <- 1:7
+v1 + v4 # 會出現警告，因為長度並非互為倍數
+v1 + 100 # 後面會進行循環補齊，形成具五個100的向量，並做元素對元素相加
+v1 * 4   # 後面會進行循環補齊，形成具五個4的向量，並做元素對元素相乘
+v1 >= 3 # 循環補齊做循環比較
+x <- c(1, 2, 3, NA, 5, NA, 8)
+x == NA   # 會得出NA，要小心
+2 == NA   # 會得出NA，要小心
+# is.＿＿＿ 為「疑問句」
+# as.＿＿＿ 為「當作」
+is.na(x)
+set.seed(seed = 100) # 設定亂數種子
+d <- rnorm(n = 100)
+# 求出d > 1.96的數字個數
+d > 1.96  # 可看出哪些值滿足，得出邏輯向量
+sum(d > 1.96) # 求個數，藉由「強制型別轉換」，TRUE為數值1，FALSE為數值0
+mean(d > 1.96) #求機率
 ```
 
